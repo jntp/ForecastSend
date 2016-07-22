@@ -18,6 +18,14 @@ struct parameters {
  */
 bool CheckInput(int iKey, int iLower, int iUpper, bool bBounds);
 
+/*
+ * Converts input to string to int, and checks for integer. Returns the converted int and a bool based on the given conditions.
+ * Input: string containing an integer, pointer referencing an int of struct parameters, bool for do-while loops, lower range, upper range 
+ * Output: pointer to int, bool variable in response to the condition 
+ */ 
+bool CheckInt(std::string sString, int* ipTarget, bool bResult, int iLower, int iUpper);
+	
+
 int main() {
 	using namespace std;
 	
@@ -35,6 +43,8 @@ int main() {
 		cout << "2: Los Angeles Area, CA" << endl;
 		cout << "3: Tucson, AZ" << endl;
 		getline(cin, sInput); // Prompt user input
+		bLoop = CheckInt(sInput, &forecast.iCity, bLoop, 0, 3); // Call CheckInt to verify if input is correct
+		cout << forecast.iCity << endl; // Test
 	} while (!bLoop);
 
 	// Storm Type
@@ -45,8 +55,8 @@ int main() {
 		cout << "2: Strong Storm" << endl;
 		cout << "3: Tropical Remnants" << endl;
 		cout << "4: Tropical Storm" << endl; 
-		getline(cin, forecast.iStorm); 
-		bLoop = CheckInput(forecast.iStorm, 0, 4, bLoop); // Check for correct input 
+		getline(cin, sInput); 
+		bLoop = CheckInt(sInput, &forecast.iStorm, bLoop, 0, 4); // Check for correct input 
 	} while (!bLoop);
 
 	// Weather Type
@@ -64,8 +74,8 @@ int main() {
 		cout << "4: Fog/Drizzle" << endl;
 		cout << "5: Snow Showers" << endl;
 		cout << "6: Rain mixed with Snow" << endl; 
-		getline(cin, forecast.iWeather); 
-		bLoop = CheckInput(forecast.iWeather, 0, 6, bLoop); // Check for correct input
+		getline(cin, sInput); 
+		bLoop = CheckInt(sInput, &forecast.iWeather, bLoop, 0, 6); // Check for correct input
 	
 		if (bLoop) { // If the above input is correct then run the while loop 
 			bLoopTwo = false; // Set to false so that while loop below can run 
@@ -76,9 +86,9 @@ int main() {
 			cout << "Are there strong winds with this event?" << endl;
 			cout << "0: no" << endl;
 			cout << "1: yes" << endl; 	
-			getline(cin, iWind);
-			bLoopTwo = CheckInput(iWind, 0, 1, bLoopTwo); // Check for correct input 
-			if (bLoopTwo) { // Check for correct input before assigning value for bWin
+			getline(cin, sInput);
+			bLoopTwo = CheckInt(sInput, &iWind, bLoopTwo, 0, 1); // Check for correct input 
+			if (bLoopTwo) { // Check for correct input before assigning value for bWind
 				forecast.bWind = iWind; // Assign the iWind input to the bool bWind	
 			}
 		}
@@ -95,21 +105,30 @@ int main() {
 		cout << endl;
 
 		// Check for confirmation
-		cout << "Please confirm. The start time is '" << forecast.sStart << ",' and the end time is '" << forecast.sEnd << ".' ";
-		cout << "Is this correct? (y/n)" << endl;
-		getline(cin, cAffirm); 
-		cout << endl; // Double space
+		while (true) {
+			cout << "Please confirm. The start time is '" << forecast.sStart << ",' and the end time is '" << forecast.sEnd << ".' ";
+			cout << "Is this correct? (y/n)" << endl;
+			getline(cin, sInput);
+		 
+			cout << endl; // Double space
 
-		// Check for correct input 
-		if (cAffirm == 'y') { // If user confirms response
-			bLoop = true; // Don't repeat the do-while loop
-		} else if (cAffirm == 'n') { // If user wants to resubmit the entry
-			bLoop = false; // Have the do-while loop repeat 
-		} else { // If user fails to provide proper response
-			bLoop = false; // Have the do-while loop repeat
-			cout << "Error! Please input 'y' or 'n' only. " << endl; // Output error message 
+			// Check for correct input 
+			if (sInput.length() == 1) { // Check if length of the input string is equal to one
+				cAffirm = sInput[0]; // Assign the first character of the string to variable cAffirm				
+
+				if (cAffirm == 'y') { // If user confirms response
+					bLoop = true; // Don't have the do-whie loop repeat
+					break; // Stop the while loop 
+				} else if (cAffirm == 'n') { // If user wants to resubmit the entry
+					bLoop = false; // Have the do-while loop repeat 
+					break; // Stop the while loop
+				}
+			}
+	
+			cout << "Error! Please input 'y' or 'n' only. " << endl; // Output error message if user gets to this stage
 		}
 	} while (!bLoop); 
+
 	return 0;
 }
 
@@ -133,14 +152,15 @@ bool CheckInput(int iKey, int iLower, int iUpper, bool bBounds) {
 }
 
 /*
- * Converts input to string to int, and checks for integer. Returns a bool based on the given conditions.
- * Input: string containing an integer, bool for do-while loops 
- * Output: bool variable in response to the condition 
+ * Converts input to string to int, and checks for integer. Returns the converted int and a bool based on the given conditions.
+ * Input: string containing an integer, pointer referencing an int of struct parameters, bool for do-while loops, lower range, upper range 
+ * Output: pointer to int, bool variable in response to the condition 
  */ 
-bool CheckInt(std::string sString, bool bResult) {
-	if (stringstream(sInput) >> forecast.iCity) { // Convert string to int, and check if it is an integer 
-		bResult = CheckInput(forecast.iCity, 0, 3, bResult); // Check for correct input
+bool CheckInt(std::string sString, int* ipTarget, bool bResult, int iLower, int iUpper) {
+	if (std::stringstream(sString) >> *ipTarget) { // Convert string to int, and check if it is an integer 
+		bResult = CheckInput(*ipTarget, iLower, iUpper, bResult); // Check for correct input
 	} else { // If not an integer
+		std::cout << "Error! Please input a number only." << std::endl; // Display error message
 		bResult = false; // Run the loop again
 	}
 	
