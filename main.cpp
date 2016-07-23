@@ -8,12 +8,11 @@ struct parameters {
 	    iWeather, // Type of weather
 	    iPop  // Probability of Precipitation 
 	    iAmtType, // Used to indicate whether precipitation amount will be presented as a number or a range
-	    iAmtLower, // Lower range of precipitation amount
-	    iAmtUpper; // Upper range of precipitation amount 
 	bool bWind;  // True for windy weather events
 	std::string sStart, // Start time for precipitation event
 		    sEnd; // End time for preciptation event
-	double dAmount; // Amount of rain/precip (in inches)
+	double dAmtLower, // Lower range of precipitation amount
+	       dAmtUpper; // Upper range of precipitation amount 
 } forecast;
 
 /*
@@ -24,12 +23,18 @@ struct parameters {
 bool CheckInput(int iKey, int iLower, int iUpper, bool bBounds);
 
 /*
- * Converts input to string to int, and checks for integer. Returns the converted int and a bool based on the given conditions.
- * Input: string containing an integer, pointer to an int of struct parameters, bool for do-while loops, lower range, upper range 
+ * Converts input string to int, and checks for integer. Returns the converted int and a bool based on the given conditions.
+ * Input: string containing an integer, pointer to an int in struct parameters, bool for do-while loops, lower range, upper range 
  * Output: pointer to int, bool variable in response to the condition 
  */ 
 bool CheckInt(std::string sString, int* ipTarget, bool bResult, int iLower, int iUpper);
-	
+
+/* 
+ * Converts input string to double, and checks if the input is a double. Returns a double and a bool based on the given conditions.
+ * Input: stringing containing a decimal, pointer to a double in struct parameters, bool for do-while loops
+ * Output: pointer to double, bool variable in response to the condition 
+ */
+bool ConvertDecimal(std::string sString, double* dpTarget, bool bResult);
 
 int main() {
 	using namespace std;
@@ -156,7 +161,8 @@ int main() {
 	} while (!bLoop); 
 
 	// Precipitation Amount
-	forecast.iAmtType = 0; // Assign 0 to allow for conversion
+	forecast.dAmtLower = 0; // Assign 0 to allow for conversion
+	forecast.dAmtUpper = 0;
 
 	do { 
 		cout << "Please enter the forecasted precipitation amount, up to the hundredth decimal place." << endl;
@@ -164,25 +170,28 @@ int main() {
 		cout << "0: Single Number" << endl;
 		cout << "1: Range" < endl;
 	  	getline(cin, sInput);
- 		bLoop = CheckInt(sInput, iAmtType, bLoop, 0, 1); // Check for correct input 
+ 		bLoop = CheckInt(sInput, &forecast.iAmtType, bLoop, 0, 1); // Check for correct input 
 		
 		// Based on user response, prompt user to input a single number or a range
-		
-		
-		
-		// Check Input
-		if (stringstream(sInput) >> forecast.dAmount) { // Check if user entered a number
-			// Only obtain a number to the hundredth decimal place
-			for (int i = 0; i < 3; i++) {
-				forecast.dAmount = sInput[i]; 
+		if (forecast.iAmtType == 0) {
+			cout << "Enter an amount, up to the hundredth decimal place." << endl;
+			cout << "Precip Amount: ";
+			getline(cin, sInput);
+			bLoop = ConvertDecimal(sInput, &forecast.dAmtLower, bLoop); // Check input, and convert string to double
+			
+			// Set forecast.dAmtLower equal to forecast.dAmtUpper if input verifies as correct
+			if (bLoop) { // For correct input only
+				forecast.dAmtUpper = forecast.dAmtLower; 
 			}
-			cout << forecast.dAmount << endl; // Test
-			break; // End the while loop
-		}
-
-		// Output error message if out here
-		cout << "Error! Please enter a number to the hundredth decimal place." << endl;
-		cout << endl;  
+		} else if (forecast.iAmtType == 1) {
+			cout << "Enter a lower and an upper amount of the range." << endl;
+			cout << "Lower Amount: ";
+			getline(cin, sInput);
+			bLoop = ConvertDecimal(sInput, &forecast.dAmtLower, bLoop); // Check input, and convert string to double
+			cout << "Upper Amount: ";
+			getline(cin, sInput);
+			bLoop = ConvertDecimal(sInput, &forecast.dAmtUpper, bLoop); 
+		}		
 	} while (!bLoop); 
 
 	return 0;
@@ -208,8 +217,8 @@ bool CheckInput(int iKey, int iLower, int iUpper, bool bBounds) {
 }
 
 /*
- * Converts input to string to int, and checks for integer. Returns the converted int and a bool based on the given conditions.
- * Input: string containing an integer, pointer to an int of struct parameters, bool for do-while loops, lower range, upper range 
+ * Converts input string to int, and checks for integer. Returns the converted int and a bool based on the given conditions.
+ * Input: string containing an integer, pointer to an int in struct parameters, bool for do-while loops, lower range, upper range 
  * Output: pointer to int, bool variable in response to the condition 
  */ 
 bool CheckInt(std::string sString, int* ipTarget, bool bResult, int iLower, int iUpper) {
@@ -224,4 +233,28 @@ bool CheckInt(std::string sString, int* ipTarget, bool bResult, int iLower, int 
 	return bResult; // Return the bool variable 
 }
 
+/* 
+ * Converts input string to double, and checks if the input is a double. Returns a double and a bool based on the given conditions.
+ * Input: stringing containing a decimal, pointer to a double in struct parameters, bool for do-while loops
+ * Output: pointer to double, bool variable in response to the condition 
+ */
+bool ConvertDecimal(std::string sString, double* dpTarget, bool bResult) {
+	std::string sNew; // Carries sString truncated to the hundredth decimal place
 
+	// Convert input string to double, and check for correct input
+	if (std::stringstream(sString) >> *dpTarget) { // If input is a double
+		// Obtain only the first three digits 
+		for (int i = 0; i < 4; i++) { // Index goes up to 3 because decimal point is included
+			sNew[i] = sString[i]; // Takes the first 4 indices of sString and copies them to sNew 
+		}
+
+		std::stringstream(sNew) >> *dpTarget; // Converts new string to double
+		bResult = true; // End the loop
+	} else { // If the input is not a double; improper input
+		std::cout << "Error! Please enter a decimal." << std::endl; // Output error message
+		std::cout << std::endl; 
+		bResult = false; // Run the loop again
+	}
+
+	return bResult; // Return the bool variable
+}
