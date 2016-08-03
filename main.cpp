@@ -7,7 +7,10 @@ struct parameters {
 	    iStorm, // Type of storm
 	    iWeather, // Type of weather
 	    iPop,  // Probability of Precipitation 
-	    iAmtType; // Used to indicate whether precipitation amount will be presented as a number or a range
+	    iAmtType, // Used to indicate whether precipitation amount will be presented as a number or a range
+	    iWindLower, // Lower range of wind speed
+	    iWindUpper, // Upper range of wind speed
+	    iGust; // Wind Gust (not applicable for every forecast)
 	bool bWind;  // True for windy weather events
 	std::string sStart, // Start time for precipitation event
 		    sEnd, // End time for preciptation event
@@ -31,6 +34,13 @@ bool CheckInput(int iKey, int iLower, int iUpper, bool bBounds);
  */ 
 bool CheckInt(std::string sString, int* ipTarget, bool bResult, int iLower, int iUpper);
 
+/*
+ * Based on the indicator, displays the user's response for confirmation. Asks if user wants to confirm response, and checks for proper input.
+ * Input: bool variable, integer that indicates what responses to show
+ * Output: bool variable in response to the condition 
+ */
+bool Confirm(bool bResult, int iIndicator);
+
 /* 
  * Converts input string to double, and checks if the input is a double. Returns a double and a bool based on the given conditions.
  * Input: stringing containing a decimal, pointer to a double in struct parameters, bool for do-while loops
@@ -42,7 +52,7 @@ bool ConvertDecimal(std::string sString, double* dpTarget, bool bResult);
  * Prompts user to input high and low temperature. For some cities/regions, a string concatenation will take place.
  * Input: integer that indicates whether the program will store the concatenated string in forecast.sTemp or forecast.sTempTwo. 
  */
-int HighLow(int i)
+int HighLow(int i);
 
 
 int main() {
@@ -50,8 +60,7 @@ int main() {
 	
 	// Fill in parameters
 	bool bLoop = true; // Indicates whether do-while loop should repeat
-	string sInput = ""; // Used for std::getline, getting input from user
-	char cAffirm; // For user to provide yes or no response	
+	string sInput = ""; // Used for std::getline, getting input from user	
 
 	// City/Region
 	forecast.iCity = 0; // Assign 0 to allow for conversion  
@@ -127,7 +136,8 @@ int main() {
 		cout << "End: ";
 		getline(cin, forecast.sEnd); // Input the end time
 		cout << endl;
-
+		
+		bLoop = Confirm(bLoop, 0); // Check for confirmation 
 	} while (!bLoop); 
 
 	// Probability of Precipitation
@@ -181,43 +191,83 @@ int main() {
 				getline(cin, sInput);
 				bLoop = ConvertDecimal(sInput, &forecast.dAmtUpper, bLoop);
 			} 
-		}		
+		}
+		
+		cout << endl; 		
 	} while (!bLoop); // Run if either of the conditions are false  
 
 	// Temperature	
+	do { 
+		// Check the stored value in iCity to determine the respones user needs to provide
+		// The temperature section will vary based on the indicated city/region
+		switch (forecast.iCity) {
+			case 0: // San Francisco/Oakland, CA
+				cout << "For your chosen region, you must enter the high and low temperatures twice." << endl;
+				cout << "The first time for San Francisco and the second time for Oakland." << endl;
+				cout << endl; 
+				cout << "San Francisco" << endl;
+				HighLow(1); // Call function to input high/low temperature for SF
+				cout << "Oakland" << endl;
+				HighLow(2); // Call function to input high/low temperature for Oakland 		
+				break;
+			case 2: // Los Angeles Area, CA
+				cout << "For this region, you must enter a range for both the high and low temperatures." << endl;
+				cout << "Please represent the range in this format: ##-## (e.g. 67-75)." << endl;
+				cout << "You must enter the high and low temperatures twice for the coast and the inland valleys." << endl;
+				cout << endl;
+				cout << "Coast" << endl;
+				HighLow(1);
+				cout << "Inland Valleys" << endl;
+				HighLow(2); 
+				break; 
+			case 1: // Davis/Sacramento, CA
+			case 3: // Tucson, AZ
+				// Call function to input high/low temperature
+				cout << "Please input the high and low temperature." << endl;
+				HighLow(0);
+				break;
+		}
 
-	do 
-	// Check the stored value in iCity to determine the respones user needs to provide
-	// The temperature section will vary based on the indicated city/region
-	switch (forecast.iCity) {
-		case 0: // San Francisco/Oakland, CA
-			cout << "For your chosen region, you must enter the high and low temperatures twice." << endl;
-			cout << "The first time for San Francisco and the second time for Oakland." << endl;
-			cout << "San Francisco" << endl;
-			HighLow(1); // Call function to input high/low temperature for SF
-			cout << "Oakland" << endl;
-			HighLow(2); // Call function to input high/low temperature for Oakland
-			break;
-		case 2: // Los Angeles Area, CA
-			cout << "For this region, you must enter a range for both the high and low temperatures." << endl;
-			cout << "Please represent the range in this format: ##-## (e.g. 67-75)." << endl;
-			cout << "You must enter the high and low temperatures twice for the coast and the inland valleys." << endl;
-			cout << "Coast" << endl;
-			HighLow(1);
-			cout << "Inland Valleys" << endl;
-			HighLow(2); 
-			break; 
-		case 1: // Davis/Sacramento, CA
-		case 3: // Tucson, AZ
-			// Call function to input high/low temperature
-			cout << "Please input the high and low temperature." << endl;
-			HighLow(0);
-			break;
-			
-	}
-	return 0;
+		bLoop = Confirm(bLoop, 1); // Check for confirmation 
+	} while (!bLoop); 
 
+	// Wind Speed (not applicable for every forecast)
+	// Set wind speed variables equal to zero as default value
+	forecast.iWindLower = 0;
+	forecast.iWindUpper = 0;
+	forecast.iGust = 0;
+
+	if (forecast.bWind) { // Only applies if bWind equals true
+		// Lower range of wind speed 
+		do { 
+			cout << "Enter the lower and upper range of the wind speed." << endl;
+			cout << "Lower Range: ";
+			getline(cin, sInput);
+			bLoop = CheckInt(sInput, &forecast.iWindLower, bLoop, 0, 250); // Convert to int, and check for correct input		
+		} while (!bLoop); // Runs again if user fails to provide correct input
 	
+		// Upper range of wind speed
+		do { 
+			cout << "Upper Range: ";
+			getline(cin, sInput);
+			bLoop = CheckInt(sInput, &forecast.iWindUpper, bLoop, 0, 250);
+		} while (!bLoop);
+
+		// Ask user if he/she wants to provide wind gust speed
+		do { 
+			bLoop = Confirm(bLoop, 2); // Check for correct input
+		} while (!bLoop);
+
+		// Max speed of wind gusts (not applicable for every forecast)	
+		do { 	
+			cout << "Enter a maximum speed for wind gusts." << endl;
+			cout << "Gust Speed: ";
+			getline(cin, sInput);		
+			bLoop = CheckInt(sInput, &forecast.iGust, bLoop, 0, 250);
+		} while (!bLoop); 			
+	} 
+	
+	return 0;	
 }
 
 /*
@@ -256,17 +306,38 @@ bool CheckInt(std::string sString, int* ipTarget, bool bResult, int iLower, int 
 	return bResult; // Return the bool variable 
 }
 
-bool Confirm(bool bResult, std::string strOne, std::string strTwo) {
-	std::string sInput = ""; // Initialize string for getline
+/*
+ * Based on the indicator, displays the user's response for confirmation. Asks if user wants to confirm response, and checks for proper input.
+ * Input: bool variable, integer that indicates what responses to show
+ * Output: bool variable in response to the condition 
+ */
+bool Confirm(bool bResult, int iIndicator) {
+	using namespace std; 
+
+	string sInput = ""; // Initialize string for getline
+	char cAffirm; // Response to the confirmation message; carries only 'y' or 'n' 
 	
 	// Check for confirmation
 	while (true) {
-		cout << "Please confirm. The start time is '" << forecast.sStart << "' and the end time is '" << forecast.sEnd << ".' ";
-		cout << "Is this correct? (y/n)" << endl;
+		// Display different messages based on the value of iIndicator
+		switch (iIndicator) {
+			case 0: // Indicates Forecast Start and End Time
+				cout << "Please confirm. The start time is '" << forecast.sStart << "' and the end time is '"; 
+				cout << forecast.sEnd << ".' " << endl;
+				cout << "Is this correct? (y/n)" << endl;
+				break;
+			case 1: // Indicates Temperature
+				cout << "Temperature Field 1 is " << forecast.sTemp << " degrees." << endl;
+				cout << "Temperature Field 2 is " << forecast.sTempTwo << " degrees." << endl;
+				cout << "Is this correct? (y/n)" << endl; 
+				break;
+			case 2: // Special case for wind gusts
+				cout << "Would you like to include a maximum speed for wind gusts? (y/n)" << endl;
+				break;
+		}
+			
 		getline(cin, sInput);
 		 
-		cout << endl; // Double space
-
 		// Check for correct input 
 		if (sInput.length() == 1) { // Check if length of the input string is equal to one
 			cAffirm = sInput[0]; // Assign the first character of the string to variable cAffirm				
@@ -281,8 +352,10 @@ bool Confirm(bool bResult, std::string strOne, std::string strTwo) {
 		}
 
 			cout << "Error! Please input 'y' or 'n' only. " << endl; // Output error message if user gets to this stage
+			cout << endl;
 	}
-
+	
+	cout << endl; // Double space 
 	return bResult; 
 }
 
@@ -325,7 +398,6 @@ int HighLow(int i) {
 	// Prompt user to input high temperature
 	cout << "High: ";
 	getline(cin, sHigh); 
-	cout << endl;
 	
 	// Prompt user to input low temperature
 	cout << "Low: "; 
@@ -352,4 +424,3 @@ int HighLow(int i) {
 	return 0;
 }
 
-// You last left off at making the Confirm function
