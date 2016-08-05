@@ -1,6 +1,7 @@
-#ifndef PARAMETERS_H
-#define PARAMETERS_H
+#ifndef PARAMETERS_H_
+#define PARAMETERS_H_
 
+#include <iostream>
 #include <string> 
 
 struct parameters {
@@ -19,7 +20,12 @@ struct parameters {
 		    sTempTwo; // Temperature
 	double dAmtLower, // Lower range of precipitation amount
 	       dAmtUpper; // Upper range of precipitation amount 
-} forecast;
+};
+
+/*
+ * The "main" function of parameters.cpp 
+ */
+int Parameters();
 
 /*
  * Checks input variable to see if it falls within the correct parameters. Returns a bool based on the response to the condition.  
@@ -57,4 +63,4 @@ int HighLow(int i);
 
 
 
-#endif /* PARAMETERS_H */  
+#endif /* PARAMETERS_H_ */  
