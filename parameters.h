@@ -17,7 +17,8 @@ struct parameters {
 	std::string sStart, // Start time for precipitation event
 		    sEnd, // End time for preciptation event
 		    sTemp, // Temperature
-		    sTempTwo; // Temperature
+		    sTempTwo, // Temperature
+		    sClosing; // Closing message for forecast
 	double dAmtLower, // Lower range of precipitation amount
 	       dAmtUpper; // Upper range of precipitation amount 
 };

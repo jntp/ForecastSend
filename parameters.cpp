@@ -89,8 +89,7 @@ int Parameters() {
 		getline(cin, forecast.sStart); // Input the start time
 		cout << "End: ";
 		getline(cin, forecast.sEnd); // Input the end time
-		cout << endl;
-		cout << forecast.sStart << endl; // TEST		
+		cout << endl;	
 
 		bLoop = Confirm(bLoop, 0); // Check for confirmation 
 	} while (!bLoop); 
@@ -209,18 +208,30 @@ int Parameters() {
 		} while (!bLoop);
 
 		// Ask user if he/she wants to provide wind gust speed
-		do { 
-			bLoop = Confirm(bLoop, 2); // Check for correct input
-		} while (!bLoop);
-
+		bLoop = Confirm(bLoop, 2); // Check for correct input
+	
 		// Max speed of wind gusts (not applicable for every forecast)	
-		do { 	
-			cout << "Enter a maximum speed for wind gusts." << endl;
-			cout << "Gust Speed: ";
-			getline(cin, sInput);		
-			bLoop = CheckInt(sInput, &forecast.iGust, bLoop, 0, 250);
-		} while (!bLoop); 			
+		if (bLoop) { // bLoop == true if user inputs 'y' for previous response
+			do {	
+				cout << "Enter a maximum speed for wind gusts." << endl;
+				cout << "Gust Speed: ";
+				getline(cin, sInput);		
+				bLoop = CheckInt(sInput, &forecast.iGust, bLoop, 0, 250);
+			} while (!bLoop); 
+		} 			
 	} 
+
+	// Closing Message
+	forecast.sClosing = "\n"; // Start the closing message with a newline  	
+
+	bLoop = Confirm(bLoop, 3); // Ask if user wants to include a closing message
+		
+	if (bLoop) { // Request closing message only if calling Confirm(bLoop, 3) returns true
+		cout << "Please enter a closing message in the space below. " << endl;
+		getline(cin, sInput);
+			
+		forecast.sClosing = forecast.sClosing + sInput; // Concatenate input string with newline character
+	}
 	
 	return 0;	
 }
@@ -289,6 +300,9 @@ bool Confirm(bool bResult, int iIndicator) {
 			case 2: // Special case for wind gusts
 				cout << "Would you like to include a maximum speed for wind gusts? (y/n)" << endl;
 				break;
+			case 3: // Special case for closing messages
+				cout << "Would you like to include a closing message? (y/n)" << endl;
+				break; 
 		}
 			
 		getline(cin, sInput);
@@ -298,7 +312,7 @@ bool Confirm(bool bResult, int iIndicator) {
 			cAffirm = sInput[0]; // Assign the first character of the string to variable cAffirm				
 
 			if (cAffirm == 'y') { // If user confirms response
-				bResult = true; // Don't have the do-whie loop repeat
+				bResult = true; // Don't have the do-while loop repeat
 				break; // Stop the while loop 
 			} else if (cAffirm == 'n') { // If user wants to resubmit the entry
 				bResult = false; // Have the do-while loop repeat 
