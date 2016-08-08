@@ -3,6 +3,7 @@
 #include <sstream> 
 
 #include "parameters.h"
+#include "body.h"
 
 struct parameters forecast;
 
@@ -245,8 +246,11 @@ int Concatenate() {
 
 	string sBody = "Greetings!\n"; // The forecast body will be stored here
 	 
-
-	// Get the 		
+	// Call function Greetings() to obtain the opening message, and store as char *
+ 	const char * ckpOpening = Greetings(forecast.iCity, forecast.iStorm, forecast.iWeather, forecast.bWind);
+	
+	sBody = sBody + " " + ckpOpening; // Test 
+	cout << sBody << endl; // Test	
 
 	return 0;
 }

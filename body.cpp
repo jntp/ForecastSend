@@ -1,9 +1,12 @@
 #include <iostream>
 #include <string>
+#include <sstream> 
+
+#include "body.h" 
 
 
 /*
- * Takes the value found iCity, iStorm, iWeather, and bWind and creates an opening message for the forecast. 
+ * Takes the value found in iCity, iStorm, iWeather, and bWind and creates an opening message for the forecast. 
  * Input: three int variables from earlier operations, bool indicating whether wind exists in this event
  * Output: a char pointer to a concatenated string
  */
@@ -86,7 +89,54 @@ char* Greetings(int iCity, int iStorm, int iWeather, bool bWind) {
 	const char* ckpReturn = sResult.c_str(); 
 
 	return ckpReturn; 
-
-	return 0;
 }
 
+/*
+ * Takes the lower precip amount and the upper amount, which are both doubles, and converts them strings. Based on the iAmtType and dAmtLower,
+ * creates a message to store as sResult. Returns a char pointer.
+ * Input: int specifying amount type, two doubles specifying the lower range and the upper rangeo the precip ammount.
+ * Output: a char pointer to a concatenated string 
+ */
+char* PrecipAmt(int iAmtType, double dAmtLower, double dAmtUpper) {
+	std::string sResult; // String to return as char*
+
+	// Convert doubles to strings using sstream
+	std::ostringstream strOne;
+	strOne << dAmtLower;
+	std::string sAmtLower = strOne.str(); // Assign converted dAmtLower to sAmtLower
+
+	std::ostringstream strTwo; // For dAmtupper
+	strTwo << dAmtUpper;
+	std::string sAmtUpper = strTwo.str(); // Assign converted dAmtUpper to dAmtLower
+
+	// Check if user specified single number or range for precip amount and print
+	if (iAmtType == 0) { // For single numbers
+		// For certain values, print a custom message
+		// Otherwise, print the default message (else branch of if statement)
+		if (dAmtLower <= 0.10) {
+			sResult = "Rainfall less than a tenth of an inch.";
+		} else if (dAmtLower = 0.25) {
+			sResult = "Rainfall near a quarter of an inch.";
+		} else if (dAmtLower = 0.50) {
+			sResult = "Rainfall near a half an inch.";
+		} else if (dAmtLower = 0.75) {
+			sResult = "Rainfall near three quarters of an inch.";
+		} else if (dAmtLower = 1.00) {
+			sResult = "Rainfall near one inch.";
+		} else { 
+			sResult = "Rainfall near " + sAmtLower + " inches."; 
+		}
+	} else if (iAmtType == 1) { // For ranges
+		// Messages will vary based on whether the lower amount is less than or greater than/equal to one inch.
+		if (dAmtLower < 1.00) {
+			sResult = "Rainfall between " + sAmtLower + " and " + sAmtUpper + " inches.";
+		} else if (dAmtLower >= 1.00) {
+			sResult = sAmtLower + " to " + sAmtUpper " inches of rain expected.";
+		}
+	}
+
+	// Convert string to char* to return value
+	const char* ckpReturn = sResult.c_str();
+
+	return ckpReturn; 
+}
