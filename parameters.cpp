@@ -7,6 +7,8 @@
 
 struct parameters forecast;
 
+int Concatenate(); 
+
 /*
  * The "main" function of parameters.cpp 
  */
@@ -246,100 +248,27 @@ int Concatenate() {
 
 	string sBody = "Greetings!\n"; // The forecast body will be stored here
 	 
-	// Call function Greetings() to obtain the opening message, and store as char *
+	// Call function Greetings() to obtain the opening message, and store as const char *
  	const char * ckpOpening = Greetings(forecast.iCity, forecast.iStorm, forecast.iWeather, forecast.bWind);
+	string str(ckpOpening); // Convert to String
+
+	// Write the next sentence by concatenating forecast.sStart and forecast.sEnd strings	
+	string sPrecipOnset = "Rain will begin at " + forecast.sStart + " and end at " + forecast.sEnd + "."; 
 	
-	sBody = sBody + " " + ckpOpening; // Test 
+	// Concatenate sBody, ckpOening, and sPrecipOnset to obtain the first paragraph of the forecast
+	sBody = sBody + ckpOpening + " " + sPrecipOnset;
+
+	// Write the Chance of Rain sentence
+	string Pop = "\n\nChance of rain " + forecast.iPop + "."; 
+	
+	// Call function PrecipAmt() to obtain the precip amount and then convert to string
+	const char * ckpAmount = PrecipAmt(forecast.iAmtType, forecast.dAmtLower, forecast.dAmtUpper);
+	string str(ckpAmount);
+
 	cout << sBody << endl; // Test	
 
 	return 0;
 }
-
-
-char* Greetings(int iCity, int iStorm, int iWeather, bool bWind) {
-	using namespace std;
-
-	// Initialize the strings for concatenation
-	string sStrOne, sStrTwo, sStrThree, sResult; 
-	
-	// Get sStrOne based on storm type
-	switch (iStorm) {
-		case 0: // Weak storm
-			sStrOne = "A weak storm";
-			break;
-		case 1: // Moderate storm
-			sStrOne = "A storm";
-			break;
-		case 2: // Strong storm
-			sStrOne = "A strong storm";
-			break;
-		case 3: // Monsoonal moisture
-			sStrOne = "Monsoonal moisture";
-			break;
-		case 4: // Tropical remnants
-			sStrOne = "Tropical remnant moisture";
-			break;
-		case 5: // Tropical storm
-			sStrOne = "A tropical storm";
-			break; 
-	}
-
-	// Get sStrTwo based on weather type
-	switch(iWeather) {
-		case 0: // Light rain
-			sStrTwo = "light rain";
-			break;
-		case 1: // Moderate rain
-			sStrTwo = "rain";
-			break;
-		case 2: // Heavy rain
-			sStrTwo = "heavy rain";
-			break;
-		case 3: // Thunderstorms
-			sStrTwo = "rain and thunderstorms";
-			break;
-		case 4: // Fog/drizzle
-			sStrTwo = "fog and drizzle";
-			break;
-		case 5: // Snow showers
-			sStrTwo = "snow showers";
-			break;
-		case 6: // Rain mixed with snow
-			sStrTwo = "wintry mix of rain and snow";
-			break;
-	}
-
-	// Get sStrThree based on city/region 
-	switch (iCity) {
-		case 0: // San Francisco/Oakland, CA
-		case 1: // Davis/Sacramento, CA
-			sStrThree = "NorCal";
-			break;
-		case 2: // Los Angeles Area, CA
-			sStrThree = "SoCal";
-			break;
-		case 3: // Tucson, AZ
-			sStrThree = "Southern AZ";
-			break;
-	}
-		 
-	// Concatenate the three strings to produce sResult
-	// Based on bWind, include or exclude wind in string
-	if (bWind) { // Include wind
-		sResult = sStrOne + " will bring " + sStrTwo + " to " + sStrThree + " tomorrow.";
-	} else if (!bWind) { // Exclude wind
-		sResult = sStrOne + " will bring " + sStrTwo + " and wind to " + sStrThree + " tomorrow."; 
-	}
-	
-	// Convert string to char* to return the value
-	const char* ckpReturn = sResult.c_str(); 
-
-	return ckpReturn; 
-
-	return 0;
-}
-
-
 
 /*
  * Checks input variable to see if it falls within the correct parameters. Returns a bool based on the response to the condition.  

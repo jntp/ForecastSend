@@ -10,7 +10,7 @@
  * Input: three int variables from earlier operations, bool indicating whether wind exists in this event
  * Output: a char pointer to a concatenated string
  */
-char* Greetings(int iCity, int iStorm, int iWeather, bool bWind) {
+const char* Greetings(int iCity, int iStorm, int iWeather, bool bWind) {
 	using namespace std;
 
 	// Initialize the strings for concatenation
@@ -50,7 +50,11 @@ char* Greetings(int iCity, int iStorm, int iWeather, bool bWind) {
 			sStrTwo = "heavy rain";
 			break;
 		case 3: // Thunderstorms
-			sStrTwo = "rain and thunderstorms";
+			if (bWind == true) {
+				sStrTwo = "rain, thunderstorms,";
+			} else {
+				sStrTwo = "rain and thunderstorms";
+			} 
 			break;
 		case 4: // Fog/drizzle
 			sStrTwo = "fog and drizzle";
@@ -59,7 +63,7 @@ char* Greetings(int iCity, int iStorm, int iWeather, bool bWind) {
 			sStrTwo = "snow showers";
 			break;
 		case 6: // Rain mixed with snow
-			sStrTwo = "wintry mix of rain and snow";
+			sStrTwo = "rain mixed with snow";
 			break;
 	}
 
@@ -75,14 +79,14 @@ char* Greetings(int iCity, int iStorm, int iWeather, bool bWind) {
 		case 3: // Tucson, AZ
 			sStrThree = "Southern AZ";
 			break;
-	}
-		 
+	} 
+	 
 	// Concatenate the three strings to produce sResult
 	// Based on bWind, include or exclude wind in string
-	if (bWind) { // Include wind
-		sResult = sStrOne + " will bring " + sStrTwo + " to " + sStrThree + " tomorrow.";
-	} else if (!bWind) { // Exclude wind
-		sResult = sStrOne + " will bring " + sStrTwo + " and wind to " + sStrThree + " tomorrow."; 
+	if (bWind == true) { // Include wind
+		sResult = sStrOne + " will bring " + sStrTwo + " and wind to " + sStrThree + " tomorrow.";
+	} else if (bWind == false) { // Exclude wind
+		sResult = sStrOne + " will bring " + sStrTwo + " to " + sStrThree + " tomorrow."; 
 	}
 	
 	// Convert string to char* to return the value
@@ -97,7 +101,7 @@ char* Greetings(int iCity, int iStorm, int iWeather, bool bWind) {
  * Input: int specifying amount type, two doubles specifying the lower range and the upper rangeo the precip ammount.
  * Output: a char pointer to a concatenated string 
  */
-char* PrecipAmt(int iAmtType, double dAmtLower, double dAmtUpper) {
+const char* PrecipAmt(int iAmtType, double dAmtLower, double dAmtUpper) {
 	std::string sResult; // String to return as char*
 
 	// Convert doubles to strings using sstream
@@ -115,13 +119,13 @@ char* PrecipAmt(int iAmtType, double dAmtLower, double dAmtUpper) {
 		// Otherwise, print the default message (else branch of if statement)
 		if (dAmtLower <= 0.10) {
 			sResult = "Rainfall less than a tenth of an inch.";
-		} else if (dAmtLower = 0.25) {
+		} else if (dAmtLower == 0.25) {
 			sResult = "Rainfall near a quarter of an inch.";
-		} else if (dAmtLower = 0.50) {
+		} else if (dAmtLower == 0.50) {
 			sResult = "Rainfall near a half an inch.";
-		} else if (dAmtLower = 0.75) {
+		} else if (dAmtLower == 0.75) {
 			sResult = "Rainfall near three quarters of an inch.";
-		} else if (dAmtLower = 1.00) {
+		} else if (dAmtLower == 1.00) {
 			sResult = "Rainfall near one inch.";
 		} else { 
 			sResult = "Rainfall near " + sAmtLower + " inches."; 
@@ -131,7 +135,7 @@ char* PrecipAmt(int iAmtType, double dAmtLower, double dAmtUpper) {
 		if (dAmtLower < 1.00) {
 			sResult = "Rainfall between " + sAmtLower + " and " + sAmtUpper + " inches.";
 		} else if (dAmtLower >= 1.00) {
-			sResult = sAmtLower + " to " + sAmtUpper " inches of rain expected.";
+			sResult = sAmtLower + " to " + sAmtUpper + " inches of rain expected.";
 		}
 	}
 
@@ -139,4 +143,14 @@ char* PrecipAmt(int iAmtType, double dAmtLower, double dAmtUpper) {
 	const char* ckpReturn = sResult.c_str();
 
 	return ckpReturn; 
+}
+
+const char* Temperature(int iCity, std::string sTemp, std::string sTempTwo) {
+	switch (iCity) {
+		switch 0: // San Francisco/Oakland, CAi
+			
+		switch 2: // Los Angeles Area, CA	
+
+	}
+
 }
