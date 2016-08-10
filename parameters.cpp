@@ -259,11 +259,24 @@ int Concatenate() {
 	sBody = sBody + ckpOpening + " " + sPrecipOnset;
 
 	// Write the Chance of Rain sentence
-	string Pop = "\n\nChance of rain " + forecast.iPop + "."; 
+	string sPop = ToString<int>(forecast.iPop); // First convert forecast.iPop to string
+	string sChance = "\n\nChance of rain " + sPop + "."; 
 	
-	// Call function PrecipAmt() to obtain the precip amount and then convert to string
-	const char * ckpAmount = PrecipAmt(forecast.iAmtType, forecast.dAmtLower, forecast.dAmtUpper);
-	string str(ckpAmount);
+	// Call function PrecipAmt() to obtain the precip amount
+	string sAmount = PrecipAmt(forecast.iAmtType, forecast.dAmtLower, forecast.dAmtUpper);
+
+	// Call function Temperature() to obtain high/low temperatures
+	string sTemp = Temperature(forecast.iCity, forecast.sTemp, forecast.sTempTwo);
+
+	// Check for strong winds. If so, obtain the wind message
+	string sWind = "";
+
+	if (forecast.bWind == true) {
+		sWind = Wind(forecast.iWindLower, forecast.iWindUpper, forecast.iGust); // Call function Wind() to obtain wind
+	}
+
+	// Concatenate sChance, sAmount, sTemp, and possibly sWind to obtain the second paragraph of the forecast
+	sBody = sChance + " " + sAmount + " " + sTemp + " " + sWind;
 
 	cout << sBody << endl; // Test	
 

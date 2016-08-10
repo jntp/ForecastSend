@@ -5,10 +5,23 @@
 #include "body.h" 
 
 
+/* 
+ * Takes in a variable of a class numtype (either int or double). Converts numType to string.
+ * Input: variable of class numtype (either int or double)
+ * Output: Converted string  
+ */
+template <class numtype>
+std::string ToString(numtype toConvert) {
+	std::ostringstream buffer;
+	buffer << toConvert;
+	
+	return toConvert.str();
+}
+
 /*
  * Takes the value found in iCity, iStorm, iWeather, and bWind and creates an opening message for the forecast. 
  * Input: three int variables from earlier operations, bool indicating whether wind exists in this event
- * Output: a char pointer to a concatenated string
+ * Output: a const char pointer to a concatenated string
  */
 const char* Greetings(int iCity, int iStorm, int iWeather, bool bWind) {
 	using namespace std;
@@ -89,7 +102,7 @@ const char* Greetings(int iCity, int iStorm, int iWeather, bool bWind) {
 		sResult = sStrOne + " will bring " + sStrTwo + " to " + sStrThree + " tomorrow."; 
 	}
 	
-	// Convert string to char* to return the value
+	// Convert string to const char* to return the value
 	const char* ckpReturn = sResult.c_str(); 
 
 	return ckpReturn; 
@@ -97,21 +110,16 @@ const char* Greetings(int iCity, int iStorm, int iWeather, bool bWind) {
 
 /*
  * Takes the lower precip amount and the upper amount, which are both doubles, and converts them strings. Based on the iAmtType and dAmtLower,
- * creates a message to store as sResult. Returns a char pointer.
- * Input: int specifying amount type, two doubles specifying the lower range and the upper rangeo the precip ammount.
- * Output: a char pointer to a concatenated string 
+ * creates a message to store as sResult. Returns a string.
+ * Input: int specifying amount type, two doubles specifying the lower range and the upper range of the precip amount.
+ * Output: a concatenated string 
  */
-const char* PrecipAmt(int iAmtType, double dAmtLower, double dAmtUpper) {
-	std::string sResult; // String to return as char*
+std::string PrecipAmt(int iAmtType, double dAmtLower, double dAmtUpper) {
+	std::string sResult; // String to return 
 
 	// Convert doubles to strings using sstream
-	std::ostringstream strOne;
-	strOne << dAmtLower;
-	std::string sAmtLower = strOne.str(); // Assign converted dAmtLower to sAmtLower
-
-	std::ostringstream strTwo; // For dAmtupper
-	strTwo << dAmtUpper;
-	std::string sAmtUpper = strTwo.str(); // Assign converted dAmtUpper to dAmtLower
+	std::string sAmtLower = ToString<double>(dAmtLower); 
+	std::string sAmtUpper = ToString<double>(dAmtUpper);
 
 	// Check if user specified single number or range for precip amount and print
 	if (iAmtType == 0) { // For single numbers
@@ -139,18 +147,61 @@ const char* PrecipAmt(int iAmtType, double dAmtLower, double dAmtUpper) {
 		}
 	}
 
-	// Convert string to char* to return value
-	const char* ckpReturn = sResult.c_str();
-
-	return ckpReturn; 
+	return sReturn; 
 }
 
-const char* Temperature(int iCity, std::string sTemp, std::string sTempTwo) {
+/*
+ * Takes the forecast.sTemp and forecast.sTempTwo strings and produces a string based on the chosen city/region. 
+ * Input: integer containing the city/region, string of temperature parameter 1, string of temperature parameter 2
+ * Output: a concatenated string 
+ */
+std::string Temperature(int iCity, std::string sTemp, std::string sTempTwo) {
+	std::string sResult; // String to return as char* 
+
+	// Based on the city/region, displaying the temperature will differ
 	switch (iCity) {
-		switch 0: // San Francisco/Oakland, CAi
-			
+		switch 0: // San Francisco/Oakland, CA
+			sResult = "The high/low will be " + sTemp + "F in SF and " + sTempTwo + "F in Oakland.";
+			break; 	
 		switch 2: // Los Angeles Area, CA	
+			sResult = "The high/low will be " + sTemp + "F near the coast and " + sTempTwo + "F in the inland valleys.";
+			break;
+		default:
+			sResult = "The high will be " + sTemp + "F and the low " + sTempTwo + "F."; 
+			break; 
 
 	}
 
+	return sResult; 
+}
+
+/*
+ * Takes the lower and upper wind speeds as well as the wind gusts and produces a concatenated string.
+ * Input: three ints featuring lower wind speed, upper wind speed, and wind gust
+ * Output: a concatenated string 
+ */
+std::string Wind(int iWindLower, int iWindUpper, int iGust) {
+	std::string sResult; // String to return as char*
+
+	// Convert ints to strings
+	std::string sWindLower = ToString<int>(iWindLower);  
+	std::string sWindUpper = ToString<int>(iWindUpper);
+	std::string sGust = ToString<int>(iGust); 
+
+	// Check for wind gusts, then create the message based on the lower wind speed
+	if (iGust > 0) {
+		if (iWindLower < 15) { // For lower wind speeds less than 15 mph
+			sResult = "Breezy--winds " + sWindLower + "-" + sWindUpper + " mph with gusts up to " + sGust + " mph.";
+		} else {
+			sResult = "Windy--winds " + sWindLower + "-" + sWindUpper + " mph with gusts up to " + sGust + " mph.";
+		}
+	} else {
+		if (iWindLower < 15) {
+			sResult = "Breezy--winds " + sWindLower + "-" + sWindUpper + " mph.";
+		} else {
+			sResult = "Windy--winds " + sWindLower + "-" + sWindUpper + " mph.";
+		}
+	}
+
+	return sResult; 
 }
