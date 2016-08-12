@@ -15,7 +15,7 @@ std::string ToString(numtype toConvert) {
 	std::ostringstream buffer;
 	buffer << toConvert;
 	
-	return toConvert.str();
+	return buffer.str();
 }
 
 /*
@@ -147,7 +147,7 @@ std::string PrecipAmt(int iAmtType, double dAmtLower, double dAmtUpper) {
 		}
 	}
 
-	return sReturn; 
+	return sResult; 
 }
 
 /*
@@ -160,10 +160,10 @@ std::string Temperature(int iCity, std::string sTemp, std::string sTempTwo) {
 
 	// Based on the city/region, displaying the temperature will differ
 	switch (iCity) {
-		switch 0: // San Francisco/Oakland, CA
+		case 0: // San Francisco/Oakland, CA
 			sResult = "The high/low will be " + sTemp + "F in SF and " + sTempTwo + "F in Oakland.";
 			break; 	
-		switch 2: // Los Angeles Area, CA	
+		case 2: // Los Angeles Area, CA	
 			sResult = "The high/low will be " + sTemp + "F near the coast and " + sTempTwo + "F in the inland valleys.";
 			break;
 		default:

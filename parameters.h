@@ -28,6 +28,12 @@ struct parameters {
 int Parameters();
 
 /*
+ * Based on the user responses, produce and concatenate strings to create a weather forecast.
+ * Output: string featuring the weather forecast
+ */
+std::string Concatenate();
+
+/*
  * Checks input variable to see if it falls within the correct parameters. Returns a bool based on the response to the condition.  
  * Input: int variable to be checked, lower range, upper range, bool variable 
  * Output: bool variable in response to the condition 

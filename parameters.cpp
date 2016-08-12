@@ -5,10 +5,9 @@
 #include "parameters.h"
 #include "body.h"
 
+
 struct parameters forecast;
-
-int Concatenate(); 
-
+ 
 /*
  * The "main" function of parameters.cpp 
  */
@@ -237,13 +236,20 @@ int Parameters() {
 		forecast.sClosing = forecast.sClosing + sInput; // Concatenate input string with newline character
 	}
 
-	Concatenate(); 
-	
-	return 0;	
+	// Making the Forecast
+	string sForecast; // Stores the weather forecast
+	sForecast = Concatenate(); // Create the weather forecast and store in giant string
+
+	cout << sForecast << endl; // Test	
+
+	return sForecast;	
 }
 
-
-int Concatenate() {
+/*
+ * Based on the user responses, produce and concatenate strings to create a weather forecast.
+ * Output: string featuring the weather forecast
+ */
+std::string Concatenate() {
 	using namespace std;
 
 	string sBody = "Greetings!\n"; // The forecast body will be stored here
@@ -260,7 +266,7 @@ int Concatenate() {
 
 	// Write the Chance of Rain sentence
 	string sPop = ToString<int>(forecast.iPop); // First convert forecast.iPop to string
-	string sChance = "\n\nChance of rain " + sPop + "."; 
+	string sChance = "\n\nChance of rain " + sPop + "%."; 
 	
 	// Call function PrecipAmt() to obtain the precip amount
 	string sAmount = PrecipAmt(forecast.iAmtType, forecast.dAmtLower, forecast.dAmtUpper);
@@ -275,12 +281,13 @@ int Concatenate() {
 		sWind = Wind(forecast.iWindLower, forecast.iWindUpper, forecast.iGust); // Call function Wind() to obtain wind
 	}
 
-	// Concatenate sChance, sAmount, sTemp, and possibly sWind to obtain the second paragraph of the forecast
-	sBody = sChance + " " + sAmount + " " + sTemp + " " + sWind;
+	// Concatenate sBody with sChance, sAmount, sTemp, and possibly sWind to attach the second paragraph of the forecast
+	sBody = sBody + sChance + " " + sAmount + " " + sTemp + " " + sWind;
 
-	cout << sBody << endl; // Test	
+	// Lastly concatenate sBody with two newlines and forecast.sClosing to attach the third paragraph of the forecast
+	sBody = sBody + "\n" + forecast.sClosing; 
 
-	return 0;
+	return sBody;
 }
 
 /*
