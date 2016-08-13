@@ -12,11 +12,11 @@ template <class numtype> std::string ToString(numtype toConvert);
 
 
 /*
- * Takes the value found iCity, iStorm, iWeather, and bWind and creates an opening message for the forecast. 
+ * Takes the value found in iCity, iStorm, iWeather, and bWind and creates an opening message for the forecast. 
  * Input: three int variables from earlier operations, bool indicating whether wind exists in this event
- * Output: a const char pointer to a concatenated string
+ * Output: a concatenated string
  */
-const char* Greetings(int iCity, int iStorm, int iWeather, bool bWind);
+std::string Greetings(int iCity, int iStorm, int iWeather, bool bWind);
 
 
 /*

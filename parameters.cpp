@@ -9,9 +9,10 @@
 struct parameters forecast;
  
 /*
- * The "main" function of parameters.cpp 
+ * The "main" function of parameters.cpp. Returns a string of a full weather forecast.
+ * Output: string featuring the forecast 
  */
-int Parameters() {
+std::string Parameters() {
 	using namespace std;
 	
 	// Fill in parameters
@@ -239,10 +240,8 @@ int Parameters() {
 	// Making the Forecast
 	string sForecast; // Stores the weather forecast
 	sForecast = Concatenate(); // Create the weather forecast and store in giant string
-
-	cout << sForecast << endl; // Test	
-
-	return sForecast;	
+	
+	return sForecast; // Return the forecast
 }
 
 /*
@@ -254,15 +253,14 @@ std::string Concatenate() {
 
 	string sBody = "Greetings!\n"; // The forecast body will be stored here
 	 
-	// Call function Greetings() to obtain the opening message, and store as const char *
- 	const char * ckpOpening = Greetings(forecast.iCity, forecast.iStorm, forecast.iWeather, forecast.bWind);
-	string str(ckpOpening); // Convert to String
+	// Call function Greetings() to obtain the opening message
+ 	string sOpening = Greetings(forecast.iCity, forecast.iStorm, forecast.iWeather, forecast.bWind);
 
 	// Write the next sentence by concatenating forecast.sStart and forecast.sEnd strings	
 	string sPrecipOnset = "Rain will begin at " + forecast.sStart + " and end at " + forecast.sEnd + "."; 
 	
 	// Concatenate sBody, ckpOening, and sPrecipOnset to obtain the first paragraph of the forecast
-	sBody = sBody + ckpOpening + " " + sPrecipOnset;
+	sBody = sBody + sOpening + " " + sPrecipOnset;
 
 	// Write the Chance of Rain sentence
 	string sPop = ToString<int>(forecast.iPop); // First convert forecast.iPop to string

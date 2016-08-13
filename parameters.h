@@ -23,9 +23,10 @@ struct parameters {
 };
 
 /*
- * The "main" function of parameters.cpp 
+ * The "main" function of parameters.cpp. Returns a string of a full weather forecast.
+ * Output: string featuring the forecast 
  */
-int Parameters();
+std::string Parameters();
 
 /*
  * Based on the user responses, produce and concatenate strings to create a weather forecast.
