@@ -35,7 +35,33 @@ int main() {
 		vars.push_back(Var("Body", "Yo whatsup"));
 		response = t.request("/" + API_VERSION + "/Accounts/" + ACCOUNT_SID + "/SMS/Messages", "POST", vars);
 		cout << response << endl; 
+		
+		// TwiML response
 
+
+		// Send message back
+   /*
+    TwiMLResponse response;
+    Say say ("Hello, how are you?");
+    say.setLoop(5);
+    say.setVoice("woman");
+    response.append(say);
+    cout << response.toXML() << endl;
+
+    // Gather, redirect
+    TwiMLResponse response2;
+    Gather gather;
+    gather.setNumDigits(10);
+    Say say2 ("Press 1");
+    Redirect redirect;
+    gather.append(say2);
+    response2.append(gather);
+    response2.append(redirect);
+    cout << response2.toXML() << endl;
+   */
+		TwiMLResponse response;
+		Sms sms ("Response received."); 
+		response.append(sms); 
 
 	} catch (char const* str) {
 		cout << "Exception raised: " << str << endl; 
