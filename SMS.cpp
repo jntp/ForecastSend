@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <cstdlib>
 
 using namespace std;
 
@@ -15,58 +16,55 @@ int main() {
 	const string API_VERSION = "2010-04-01";
 
 	// Twilio AccountSid and AuthToken
-	const string ACCOUNT_SID = "AC331b62196886f4458f3f134d5043abfc";
-	const string ACCOUNT_TOKEN = "48758d26dc705807695acb4de23436cb";
+	const string ACCOUNT_SID = "XXXX";
+	const string ACCOUNT_TOKEN = "XXXX";
 
 	// Outgoing Caller ID previously validated with Twilio
-	const string CALLER_ID = "+17148315677";
+	const string CALLER_ID = "XXXX";
 
 	string response;
 	
  	vector<Var> vars; 
+
+	// Prompt input from user 
+	string sInput = ""; 
+	string sChar = ""; // For later confirmation
+	int iLength; // Measures the length of the message in characters
+
+	cout << "Enter your message here: " << endl;
+	getline(cin, sInput);
+	iLength = sInput.size(); // Get length of string
+
+	// Display output and ask for confirmation
+	cout << endl;
+	cout << "The message you are about to send is: " << endl;
+	cout << sInput << endl;
+	cout << endl;
+	cout << "Message length: " << iLength << " characters or " << iLength/160 + 1 << " message(s) [MAX: 1600 characters]" << endl;
+	cout << "This message will be sent to Justin Tang (+7143996939)" << endl;
+	cout << "Are you sure you want to send this message? (y/n)" << endl;
+	cout << "WARNING! ENTERING 'n' or any other character besides 'y'  will exit the program." << endl;
+	getline(cin, sChar);
+	char cConfirm = sChar[0]; // Obtain the first character of string and convert to char
+	
+	// Check confirmation 
+	if (cConfirm != 'y') { 
+		exit(EXIT_FAILURE); // Exit the program 
+	} 
 
 	try {
 		// Twilio REST
 		Rest t (ACCOUNT_SID, ACCOUNT_TOKEN);
 
 		// Send SMS
-		vars.push_back(Var("To", "+17143996939"));
-		vars.push_back(Var("From", "+17148315677"));
-		vars.push_back(Var("Body", "Yo whatsup"));
+		vars.push_back(Var("To", "XXXX"));
+		vars.push_back(Var("From", "XXXXTWILIOPHONENUMBERXXXX"));
+		vars.push_back(Var("Body", sInput));
 		response = t.request("/" + API_VERSION + "/Accounts/" + ACCOUNT_SID + "/SMS/Messages", "POST", vars);
-		cout << response << endl; 
-		
-		// TwiML response
-
-
-		// Send message back
-   /*
-    TwiMLResponse response;
-    Say say ("Hello, how are you?");
-    say.setLoop(5);
-    say.setVoice("woman");
-    response.append(say);
-    cout << response.toXML() << endl;
-
-    // Gather, redirect
-    TwiMLResponse response2;
-    Gather gather;
-    gather.setNumDigits(10);
-    Say say2 ("Press 1");
-    Redirect redirect;
-    gather.append(say2);
-    response2.append(gather);
-    response2.append(redirect);
-    cout << response2.toXML() << endl;
-   */
-		TwiMLResponse response;
-		Sms sms ("Response received."); 
-		response.append(sms); 
-
+		cout << response << endl;  
 	} catch (char const* str) {
 		cout << "Exception raised: " << str << endl; 
 	}
-
 
 	return 0;
 }
