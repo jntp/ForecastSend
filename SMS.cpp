@@ -49,29 +49,40 @@ int main() {
 	string sIdentifier = City(); // Get the string to search later	
 
 	// Open data.txt and search for recipients 
-	string line;
+	string sLine;
 	ifstream database("data.txt");
 
 	if (database.is_open()) { // Check for open file
 		// Create a vector to dynamically allocate space for array string
-		vector<string> saRecipients; 
-		int iTest; // Testing
+		vector<string> saNames; // For the names of recipients
+		vector<string> saNumbers; // For the recipients' phone numbers
+		 
+		// Variables for parsing strings 
+		string sDelimiter = ", "; 
+		string sToken; // Temporarily stores parsed substring
+		size_t pos = 0; // Starting position of string
+		int iTest = 0; // Testing
 	
 		// Search through the text.file and look for recipients in the specified region 
-		while (getline(database, line)) { // Go through each line
-			iTest++; // Testing
-
+		while (getline(database, sLine)) { // Go through each line
 			// Check if every user specified to send the message to every recipient in the database 
-			if (sIdentifier == "ALL") {
-				saRecipients.push_back(line); // Add each recipient information to the array of strings
-			} else { 
-				if (line.find(sIdentifier, 0) != string::npos) { // Search for item not an the end of the string (!= string::npos)
-					// Store in array of strings
-					saRecipients.push_back(line); 
-				}
-			}
+			if (sIdentifier == "ALL" || sLine.find(sIdentifier, 0) != string::npos) {
+				// Parse the string
+				pos = sLine.find(sDelimiter);
+				sToken = sLine.substr(0, pos);
+				cout << sToken << endl; // Testing
+				saNames.push_back(sToken); // Add to the array of strings
+				sLine.erase(0, pos + sDelimiter.length());
 
-			cout << saRecipients[iTest] << endl; // Testing
+				pos = 0 + sLine.find(sDelimiter); // Reset the position and assign new position based on the next delimiter
+				sLine.erase(0, pos + sDelimiter.length());
+				cout << sLine << endl; // Testing
+				saNumbers.push_back(sLine); 				 
+			} 
+
+			// cout << saNames[iTest] << endl; // Testing
+			// cout << saNumbers[iTest] << endl; // Testing
+			iTest++; // Testing
 		}
 
 		database.close();
@@ -113,6 +124,7 @@ int main() {
 
 	return 0;
 }
+
 
 /* 
  * Prompts user to enter a city or region. Checks for proper input and assigns an integer. Coverts integer to a string used as an identifier in the 
