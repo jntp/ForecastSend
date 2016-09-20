@@ -52,37 +52,33 @@ int main() {
 	string sLine;
 	ifstream database("data.txt");
 
-	if (database.is_open()) { // Check for open file
-		// Create a vector to dynamically allocate space for array string
-		vector<string> saNames; // For the names of recipients
-		vector<string> saNumbers; // For the recipients' phone numbers
-		 
+	// Create a vector to dynamically allocate space for array string
+	vector<string> saNames; // For the names of recipients
+	vector<string> saNumbers; // For the recipients' phone numbers
+	unsigned int uiTally = 0; // Keeps track of number of recipients
+
+	if (database.is_open()) { // Check for open file 
 		// Variables for parsing strings 
 		string sDelimiter = ", "; 
 		string sToken; // Temporarily stores parsed substring
 		size_t pos = 0; // Starting position of string
-		int iTest = 0; // Testing
 	
 		// Search through the text.file and look for recipients in the specified region 
 		while (getline(database, sLine)) { // Go through each line
 			// Check if every user specified to send the message to every recipient in the database 
 			if (sIdentifier == "ALL" || sLine.find(sIdentifier, 0) != string::npos) {
 				// Parse the string
-				pos = sLine.find(sDelimiter);
-				sToken = sLine.substr(0, pos);
-				cout << sToken << endl; // Testing
+				pos = sLine.find(sDelimiter); // Find position of delimiter in string and assign to pos
+				sToken = sLine.substr(0, pos); // Get the substring and assign to the temporary sToken string
 				saNames.push_back(sToken); // Add to the array of strings
-				sLine.erase(0, pos + sDelimiter.length());
+				sLine.erase(0, pos + sDelimiter.length()); // Erase the name part of the string
 
 				pos = 0 + sLine.find(sDelimiter); // Reset the position and assign new position based on the next delimiter
-				sLine.erase(0, pos + sDelimiter.length());
-				cout << sLine << endl; // Testing
-				saNumbers.push_back(sLine); 				 
-			} 
+				sLine.erase(0, pos + sDelimiter.length()); // Erase the city part, leaving out only the phone number
+				saNumbers.push_back(sLine); // Amend to string array 
 
-			// cout << saNames[iTest] << endl; // Testing
-			// cout << saNumbers[iTest] << endl; // Testing
-			iTest++; // Testing
+				uiTally++; 				 
+			} 
 		}
 
 		database.close();
@@ -97,7 +93,20 @@ int main() {
 	cout << sInput << endl;
 	cout << endl;
 	cout << "Message length: " << iLength << " characters or " << iLength/160 + 1 << " message(s) [MAX: 1600 characters]" << endl;
-	cout << "This message will be sent to Justin Tang (+7143996939)" << endl;
+
+	// Display recipients' name and phone number
+	cout << "This message will be sent to ";
+	for (unsigned int i = 0; i < uiTally; i++) {
+		cout << saNames[i] << " (" << saNumbers[i] << ")";
+		
+		// Determine current recipient is not the last one... for formating purposes 
+		if (i != (uiTally - 1)) {
+			cout << ", ";
+		}
+	}
+	cout << "." << endl; // Amend a period to end the sentence
+
+	cout << endl; 
 	cout << "Are you sure you want to send this message? (y/n)" << endl;
 	cout << "WARNING! ENTERING 'n' or any other character besides 'y'  will exit the program." << endl;
 	getline(cin, sChar);
@@ -113,11 +122,14 @@ int main() {
 		Rest t (ACCOUNT_SID, ACCOUNT_TOKEN);
 
 		// Send SMS
-		vars.push_back(Var("To", "XXXX"));
-		vars.push_back(Var("From", "XXTWILIONUMBERXX"));
-		vars.push_back(Var("Body", sInput));
-		response = t.request("/" + API_VERSION + "/Accounts/" + ACCOUNT_SID + "/SMS/Messages", "POST", vars);
-		cout << response << endl;  
+		for (unsigned int j = 0; j < uiTally; j++) { // Must send to each recipient individually 
+			vars.push_back(Var("To", saNumbers[j]));
+			vars.push_back(Var("From", "XXTWILIONUMBERXX"));
+			vars.push_back(Var("Body", sInput));
+			response = t.request("/" + API_VERSION + "/Accounts/" + ACCOUNT_SID + "/SMS/Messages", "POST", vars);
+			cout << response << endl;  
+			cout << endl; 
+		}
 	} catch (char const* str) {
 		cout << "Exception raised: " << str << endl; 
 	}
