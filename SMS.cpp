@@ -126,7 +126,7 @@ int main() {
 			vars.push_back(Var("To", saNumbers[j]));
 			vars.push_back(Var("From", "XXTWILIONUMBERXX"));
 			vars.push_back(Var("Body", sInput));
-			response = t.request("/" + API_VERSION + "/Accounts/" + ACCOUNT_SID + "/SMS/Messages", "POST", vars);
+			response = t.request("/" + API_VERSION + "/Accounts/" + ACCOUNT_SID + "/Messages", "POST", vars);
 			cout << response << endl;  
 			cout << endl; 
 		}
