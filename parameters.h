@@ -68,6 +68,11 @@ bool ConvertDecimal(std::string sString, double* dpTarget, bool bResult);
  */
 int HighLow(int i);
 
+/*
+ * Converts forecast.iCity to a string used as an identifier in the data.txt database.
+ * Output: string code for identification 
+ */
+std::string CityCode();
 
 
 #endif /* PARAMETERS_H_ */  

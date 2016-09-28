@@ -52,7 +52,7 @@ int main() {
 	string sLine;
 	ifstream database("data.txt");
 
-	// Create a vector to dynamically allocate space for array string
+	// Create a vector to dynamically allocate space for array strings
 	vector<string> saNames; // For the names of recipients
 	vector<string> saNumbers; // For the recipients' phone numbers
 	unsigned int uiTally = 0; // Keeps track of number of recipients
@@ -63,7 +63,7 @@ int main() {
 		string sToken; // Temporarily stores parsed substring
 		size_t pos = 0; // Starting position of string
 	
-		// Search through the text.file and look for recipients in the specified region 
+		// Search through the text file and look for recipients in the specified region 
 		while (getline(database, sLine)) { // Go through each line
 			// Check if every user specified to send the message to every recipient in the database 
 			if (sIdentifier == "ALL" || sLine.find(sIdentifier, 0) != string::npos) {
@@ -99,7 +99,7 @@ int main() {
 	for (unsigned int i = 0; i < uiTally; i++) {
 		cout << saNames[i] << " (" << saNumbers[i] << ")";
 		
-		// Determine current recipient is not the last one... for formating purposes 
+		// Determine if the current recipient is not the last one... for formatting purposes 
 		if (i != (uiTally - 1)) {
 			cout << ", ";
 		}

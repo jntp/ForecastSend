@@ -2,6 +2,7 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include <cstdlib>
 
 #include "parameters.h"
 
@@ -65,12 +66,93 @@ int main() {
 	
 	vector<Var> vars;
 
-	
+	// Get the city code string
+	string sCity = CityCode();
 
+	// Open data.txt and search for recipients
+	string sLine;
+	ifstream database("data.txt");	
+
+	// Create a vector to dynamically allocate space for array strings 
+	vector<string> saNames; // For the names of recipients
+	vector<string> saNumbers; // For the recipients' phone numbers
+	unsigned int uiTally = 0; // Keeps track of number of recipients
+
+	if (database.is_open()) { // Check for open file
+		// Variables for parsing strings
+		string sDelimiter = ", ";
+		string sToken; // Temporarily stores parsed substring
 		
+		size_t pos = 0; // Starting position of string
+		
+		// Search through the text file and look for recipients in the specified region
+		while (getline(database, sLine) { // Go through each line
+			if (sLine.find(sIdentifier, 0) != string::npos) { 
+				// Parse the string
+				pos = sLine.find(sDelimiter); // Find position of delimiter in string and assign to pos
+				sToken = sLine.substr(0, pos); // Get the substring and assign to the temporary sToken string
+				saNames.push_back(sToken); // Add to the array of strings
+				sLine.erase(0, pos + sDelimiter.length()); // Erase the name part of the string				
+				pos = 0 + sLine.find(sDelimiter); // Reset the position and assign new position based on the next delimiter
+				sLine.erase(0, pos + sDelimter.length()); // Erase the city part, leaving out only the phone number
+				saNumbers.push_back(sLine); // Amend to string array
 
+				uiTally++; 
+			}
+		}
+
+		database.close();
+	} else {
+		cout << "Error! Unable to open data.txt. Program will exit." << endl;
+		exit(EXIT_FAILURE); // Exit the program 
+	}
+
+	// Open forecast.txt to display for user confirmation 
+	ifstream forecast("forecast.txt"); 
+	string sProduct = ""; // Forecast to send via Twilio 
+	int iLength; // Measures the length of the message in characters 
+
+	do {
+		if (forecast.is_open()) {
+			// Go through each line and save in a string
+			while (getline(forecast, sLine)) {
+				sProduct = sProduct + sLine; // Concatenate to sProduct each time the program retrieves sLine from file
+			}
+
+			iLength = sProduct.size(); // Get length of string 
+
+			forecast.close(); 
+		} else {
+			cout << "Error! Unable to open forecast.txt. Program will exit." << endl;
+			exit(EXIT_FAILURE); 
+		}
+
+		// Prepare to display the forecast
+		cout << endl; 
+		cout << "-------------------------------------------------------" << endl;
+		
+		// Display the recipients' name and phone number
+		cout << "The following text will be sent to ";
+		for (unsigned int i = 0; i < uiTally; i++) {
+			cout << saNames[i] << " (" << saNumbers[i] << ")";
+
+			// Determine if the current recipient is not the last one... for formatting purposes
+			if (i != (uiTally - 1)) {
+				cout << ", ";
+			}
+		}
+		cout << "." << endl; // Amend a period to end the sentence
+		
+		cout << endl;
+		cout << "*****START*****" << endl;
+		cout << sProduct << endl; // Display the forecast 
+		cout << "******END******" << endl;
+		cout << endl; 
+		cout << "MESSAGE LENGTH: " << iLength << " characters." << endl;
+		cout << "NUMBER OF MESSAGES: " << iLength/160 + 1 << endl; 
 	
-	
+	} while ();
+
 	return 0;
 }
 

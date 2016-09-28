@@ -445,3 +445,28 @@ int HighLow(int i) {
 	return 0;
 }
 
+/*
+ * Converts forecast.iCity to a string used as an identifier in the data.txt database.
+ * Output: string code for identification 
+ */
+std::string CityCode() {
+	string sCode;
+
+	switch (forecast.iCity) {
+		case 0: // San Francisco/Oakland, CA
+			sCode = "SF";
+			break;
+		case 1: // Davis/Sacramento, CA
+			sCode = "SAC"
+			break;
+		case 2: // Los Angeles Area, CA
+			sCode = "LA";
+			break;
+		case 3: // Tucson, AZ
+			sCode = "TCSN";
+			break;
+	}
+
+	return sCode; 
+}
+
