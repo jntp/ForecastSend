@@ -86,15 +86,15 @@ int main() {
 		size_t pos = 0; // Starting position of string
 		
 		// Search through the text file and look for recipients in the specified region
-		while (getline(database, sLine) { // Go through each line
-			if (sLine.find(sIdentifier, 0) != string::npos) { 
+		while (getline(database, sLine)) { // Go through each line
+			if (sLine.find(sCity, 0) != string::npos) { 
 				// Parse the string
 				pos = sLine.find(sDelimiter); // Find position of delimiter in string and assign to pos
 				sToken = sLine.substr(0, pos); // Get the substring and assign to the temporary sToken string
 				saNames.push_back(sToken); // Add to the array of strings
 				sLine.erase(0, pos + sDelimiter.length()); // Erase the name part of the string				
 				pos = 0 + sLine.find(sDelimiter); // Reset the position and assign new position based on the next delimiter
-				sLine.erase(0, pos + sDelimter.length()); // Erase the city part, leaving out only the phone number
+				sLine.erase(0, pos + sDelimiter.length()); // Erase the city part, leaving out only the phone number
 				saNumbers.push_back(sLine); // Amend to string array
 
 				uiTally++; 
@@ -108,14 +108,16 @@ int main() {
 	}
 
 	// Open forecast.txt to display for user confirmation 
-	ifstream forecast("forecast.txt"); 
 	string sProduct = ""; // Forecast to send via Twilio 
 	int iLength; // Measures the length of the message in characters 
 
-	do {
+	while (true) { // Loops to allow for user confirmation 
+		ifstream forecast("forecast.txt"); 
+
 		if (forecast.is_open()) {
 			// Go through each line and save in a string
 			while (getline(forecast, sLine)) {
+ 				cout << sLine << endl; // Testing 
 				sProduct = sProduct + sLine; // Concatenate to sProduct each time the program retrieves sLine from file
 			}
 
@@ -150,8 +152,28 @@ int main() {
 		cout << endl; 
 		cout << "MESSAGE LENGTH: " << iLength << " characters." << endl;
 		cout << "NUMBER OF MESSAGES: " << iLength/160 + 1 << endl; 
-	
-	} while ();
+
+		// Prompt user for confirmation
+		cout << endl;
+		cout << "Are you sure you want to send the forecast? (y/n)" << endl;
+		getline(cin, sInput);
+		char cInput = sInput[0]; // Convert to char
+
+		if (cInput == 'y') {
+			break; // End the while loop
+		} else if (cInput == 'n') {
+			sProduct = ""; // Empty the forecast string
+			cout << endl;
+			cout << "Please edit forecast.txt and try again." << endl;
+			cout << "Press any key to continue." << endl;
+			getline(cin, sInput); 
+		} else {	
+			sProduct = ""; 
+			cout << endl;
+			cout << "Error! Please enter 'y' or 'n' only. Try again!" << endl;
+		}
+			
+	}
 
 	return 0;
 }

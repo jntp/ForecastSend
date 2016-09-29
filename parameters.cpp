@@ -450,14 +450,14 @@ int HighLow(int i) {
  * Output: string code for identification 
  */
 std::string CityCode() {
-	string sCode;
+	std::string sCode;
 
 	switch (forecast.iCity) {
 		case 0: // San Francisco/Oakland, CA
 			sCode = "SF";
 			break;
 		case 1: // Davis/Sacramento, CA
-			sCode = "SAC"
+			sCode = "SAC";
 			break;
 		case 2: // Los Angeles Area, CA
 			sCode = "LA";
