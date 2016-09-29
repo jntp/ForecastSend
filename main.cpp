@@ -53,7 +53,7 @@ int main() {
 	/****** HERE MARKS THE BEGINNING OF TWILIO REST API CODE ******/
 
 	// Twilio REST API version
-	const string API_version = "2010-04-01"; 
+	const string API_VERSION = "2010-04-01"; 
 	
 	// Twilio AccountSid and AuthToken
 	const string ACCOUNT_SID = "XXXX";
@@ -117,7 +117,16 @@ int main() {
 		if (forecast.is_open()) {
 			// Go through each line and save in a string
 			while (getline(forecast, sLine)) {
- 				cout << sLine << endl; // Testing 
+ 				// Check if sLine is the greeting message
+				if (sProduct == "") {
+					sLine = sLine + "\n"; // Amend a newline character to format the message
+				}
+
+				// Check for empty line
+				if (sLine == "") {
+					sLine = "\n\n"; // Assign two newline characters to sLine for double spacing 
+				} 
+
 				sProduct = sProduct + sLine; // Concatenate to sProduct each time the program retrieves sLine from file
 			}
 
@@ -157,11 +166,10 @@ int main() {
 		cout << endl;
 		cout << "Are you sure you want to send the forecast? (y/n)" << endl;
 		getline(cin, sInput);
-		char cInput = sInput[0]; // Convert to char
 
-		if (cInput == 'y') {
+		if (sInput == "y") {
 			break; // End the while loop
-		} else if (cInput == 'n') {
+		} else if (sInput == "n") {
 			sProduct = ""; // Empty the forecast string
 			cout << endl;
 			cout << "Please edit forecast.txt and try again." << endl;
@@ -172,7 +180,24 @@ int main() {
 			cout << endl;
 			cout << "Error! Please enter 'y' or 'n' only. Try again!" << endl;
 		}
-			
+	}
+
+	// Send the SMS message
+	try {
+		// Twilio Rest
+		Rest t (ACCOUNT_SID, ACCOUNT_TOKEN);
+
+		// Send each message individually
+		for (unsigned int j = 0; j < uiTally; j++) {
+			vars.push_back(Var("To", saNumbers[j]));
+			vars.push_back(Var("From", "XXTWILIONUMBERXX"));
+			vars.push_back(Var("Body", sProduct));
+			response = t.request("/" + API_VERSION + "/Accounts/" + ACCOUNT_SID + "/Messages", "POST", vars);
+			cout << endl;
+			cout << response << endl; 
+		}	
+	} catch (char const* str) {
+		cout << "Exception raised: " << str << endl;
 	}
 
 	return 0;

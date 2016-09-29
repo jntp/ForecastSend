@@ -6,8 +6,8 @@ CFLAGS = -Wall -c $(DEBUG)
 LFLAGS = -Wall $(DEBUG)
 RFLAGS = -lcurl -lssl -lcrypto 
 
-main: $(OBJS)
-	$(CC) $(LFLAGS) $(OBJS) -o main 
+main: $(OBJS) $(ROBJS)
+	$(CC) $(LFLAGS) $(OBJS) $(ROBJS) -o main $(RFLAGS)
 
 main.o: main.cpp parameters.h
 	$(CC) $(CFLAGS) main.cpp 
@@ -18,8 +18,8 @@ body.o: body.cpp body.h
 parameters.o: parameters.cpp parameters.h
 	$(CC) $(CFLAGS) parameters.cpp
 
-SMS: SMS.cpp Utils.h Rest.h TwiML.h
-	$(CC) $(LFLAGS) $(ROBJS) $(RFLAGS) SMS.o -o SMS
+SMS: SMS.cpp $(ROBJS)
+	$(CC) $(LFLAGS) $(ROBJS) SMS.o -o SMS $(RFLAGS)
 
 SMS.o: SMS.cpp Utils.h Rest.h TwiML.h
 	$(CC) $(CFLAGS) SMS.cpp
