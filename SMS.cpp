@@ -122,10 +122,13 @@ int main() {
 		Rest t (ACCOUNT_SID, ACCOUNT_TOKEN);
 
 		// Send SMS
-		for (unsigned int j = 0; j < uiTally; j++) { // Must send to each recipient individually 
-			vars.push_back(Var("To", saNumbers[j]));
-			vars.push_back(Var("From", "XXTWILIONUMBERXX"));
-			vars.push_back(Var("Body", sInput));
+		vars.push_back(Var("From", "XXTWILIONUMBERXX"));
+		vars.push_back(Var("Body", sInput));
+		vars.push_back(Var("To", ""));
+
+		// Send to each recipient individually 
+		for (unsigned int j = 0; j < uiTally; j++) {  
+			vars[2].value = saNumbers[j]; // vars[2] refers to the "To" parameter
 			response = t.request("/" + API_VERSION + "/Accounts/" + ACCOUNT_SID + "/Messages", "POST", vars);
 			cout << response << endl;  
 			cout << endl; 

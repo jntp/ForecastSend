@@ -186,12 +186,13 @@ int main() {
 	try {
 		// Twilio Rest
 		Rest t (ACCOUNT_SID, ACCOUNT_TOKEN);
+		vars.push_back(Var("From", "XXTWILIONUMBERXX"));
+		vars.push_back(Var("Body", sProduct));
+		vars.push_back(Var("To", ""));
 
 		// Send each message individually
 		for (unsigned int j = 0; j < uiTally; j++) {
-			vars.push_back(Var("To", saNumbers[j]));
-			vars.push_back(Var("From", "XXTWILIONUMBERXX"));
-			vars.push_back(Var("Body", sProduct));
+			vars[2].value = saNumbers[j]; // vars[2] refers to the "To" parameter
 			response = t.request("/" + API_VERSION + "/Accounts/" + ACCOUNT_SID + "/Messages", "POST", vars);
 			cout << endl;
 			cout << response << endl; 
