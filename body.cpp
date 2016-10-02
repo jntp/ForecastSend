@@ -84,9 +84,11 @@ std::string Greetings(int iCity, int iStorm, int iWeather, bool bWind) {
 	switch (iCity) {
 		case 0: // San Francisco/Oakland, CA
 		case 1: // Davis/Sacramento, CA
+		case 4: // San Jose, CA
 			sStrThree = "NorCal";
 			break;
 		case 2: // Los Angeles Area, CA
+		case 5: // San Diego Area, CA 
 			sStrThree = "SoCal";
 			break;
 		case 3: // Tucson, AZ
@@ -160,7 +162,8 @@ std::string Temperature(int iCity, std::string sTemp, std::string sTempTwo) {
 		case 0: // San Francisco/Oakland, CA
 			sResult = "The high/low will be " + sTemp + "F in SF and " + sTempTwo + "F in Oakland.";
 			break; 	
-		case 2: // Los Angeles Area, CA	
+		case 2: // Los Angeles Area, CA
+		case 5: // San Diego Area, CA	
 			sResult = "The high/low will be " + sTemp + "F near the coast and " + sTempTwo + "F in the inland valleys.";
 			break;
 		default:

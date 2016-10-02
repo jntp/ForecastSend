@@ -110,6 +110,7 @@ int main() {
 	// Open forecast.txt to display for user confirmation 
 	string sProduct = ""; // Forecast to send via Twilio 
 	int iLength; // Measures the length of the message in characters 
+	int iSpaceCount = 0; // Accounts for newlines when counting characters
 
 	while (true) { // Loops to allow for user confirmation 
 		ifstream forecast("forecast.txt"); 
@@ -120,17 +121,19 @@ int main() {
  				// Check if sLine is the greeting message
 				if (sProduct == "") {
 					sLine = sLine + "\n"; // Amend a newline character to format the message
+					iSpaceCount++; // Increment to account for single newline when counting characters
 				}
 
 				// Check for empty line
 				if (sLine == "") {
 					sLine = "\n\n"; // Assign two newline characters to sLine for double spacing 
+					iSpaceCount++; 
 				} 
 
 				sProduct = sProduct + sLine; // Concatenate to sProduct each time the program retrieves sLine from file
 			}
 
-			iLength = sProduct.size(); // Get length of string 
+			iLength = sProduct.size() + iSpaceCount; // Get length of string, then add to account for newlines 
 
 			forecast.close(); 
 		} else {

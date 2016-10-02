@@ -158,10 +158,12 @@ string City() {
 		cout << "2: Davis/Sacramento, CA" << endl;
 		cout << "3: Los Angeles Area, CA" << endl;
 		cout << "4: Tucson, AZ" << endl; 
+		cout << "5: San Jose, CA" << endl; 
+		cout << "6: San Diego Area, CA" << endl; 
 		getline(cin, sInput); 
 
 		if (stringstream(sInput) >> iInput) { // Check for integer
-			if (iInput >= 0 && iInput <= 4) { // Correct input
+			if (iInput >= 0 && iInput <= 6) { // Correct input
 				break; // End the while loop
 			}
 		}	
@@ -184,6 +186,12 @@ string City() {
 		case 4: // Tucson, AZ
 			sInput = "TCSN";
 			break;
+		case 5: // San Jose, CA
+			sInput = "SJ";
+			break; 
+		case 6: // San Diego Area, CA
+			sInput = "SD";
+			break; 
 	}
 
 	return sInput; 
