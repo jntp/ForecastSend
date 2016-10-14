@@ -29,7 +29,7 @@ std::string Parameters() {
 		cout << "1: Davis/Sacramento, CA" << endl;
 		cout << "2: Los Angeles Area, CA" << endl;
 		cout << "3: Tucson, AZ" << endl;
-		cout << "4: San Jose, CA" << endl;
+		cout << "4: SF Bay Area, CA (The Peninsula & South Bay)" << endl;
 		cout << "5: San Diego Area, CA" << endl; 
 		getline(cin, sInput); // Prompt user input
 		bLoop = CheckInt(sInput, &forecast.iCity, bLoop, 0, 5); // Call CheckInt to verify if input is correct
@@ -157,33 +157,55 @@ std::string Parameters() {
 	} while (!bLoop); // Run if either of the conditions are false  
 
 	// Temperature	
+	// Create two strings to accomodate for different scenarios 
+	string sAreaOne;
+	string sAreaTwo; 
+
+	// Depending on the city code, assign each string the proper "terminology"
+	switch (forecast.iCity) {
+		case 0: // San Francisco/Oakland, CA
+			sAreaOne = "San Francisco";
+			sAreaTwo = "Oakland";
+			break;  	
+		case 2: // Los Angeles Area, CA
+		case 5: // San Diego Area, CA
+			sAreaOne = "Coast";
+			sAreaTwo = "Inland Valleys";
+			break; 
+		case 4: // SF Bay Area, CA (The Peninsula & South Bay)
+			sAreaOne = "Peninsula";
+			sAreaTwo = "South Bay";
+			break;
+	}
+		
 	do { 
 		// Check the stored value in iCity to determine the respones user needs to provide
 		// The temperature section will vary based on the indicated city/region
 		switch (forecast.iCity) {
 			case 0: // San Francisco/Oakland, CA
-			cout << "For your chosen region, you must enter the high and low temperatures twice." << endl;
-				cout << "The first time for San Francisco and the second time for Oakland." << endl;
+				cout << "For your chosen region, you must enter the high and low temperatures twice." << endl;
+				cout << "The first time for " << sAreaOne << "  and the second time for " << sAreaTwo << "." << endl;
 				cout << endl; 
-				cout << "San Francisco" << endl;
-				HighLow(1); // Call function to input high/low temperature for SF
-				cout << "Oakland" << endl;
-				HighLow(2); // Call function to input high/low temperature for Oakland 		
+				cout << sAreaOne << endl;
+				HighLow(1); // Call function to input high/low temperature for sAreaOne
+				cout << sAreaTwo << endl;
+				HighLow(2); // Call function to input high/low temperature for sAreaTwo		
 				break;
 			case 2: // Los Angeles Area, CA
+			case 4: // SF Bay Area, CA (The Peninsula & South Bay)
 			case 5: // San Diego Area, CA
 				cout << "For this region, you must enter a range for both the high and low temperatures." << endl;
 				cout << "Please represent the range in this format: ##-## (e.g. 67-75)." << endl;
-				cout << "You must enter the high and low temperatures twice for the coast and the inland valleys." << endl;
+				cout << "You must enter the high and low temperatures twice for the ";
+				cout << sAreaOne << " and the " << sAreaTwo << "." << endl; 
 				cout << endl;
-				cout << "Coast" << endl;
+				cout << sAreaOne << endl;
 				HighLow(1);
-				cout << "Inland Valleys" << endl;
+				cout << sAreaTwo << endl;
 				HighLow(2); 
 				break; 
 			case 1: // Davis/Sacramento, CA
 			case 3: // Tucson, AZ
-			case 4: // San Jose, CA
 				// Call function to input high/low temperature
 				cout << "Please input the high and low temperature." << endl;
 				HighLow(0);
@@ -433,6 +455,7 @@ int HighLow(int i) {
 	switch (forecast.iCity) {
 		case 0: // San Francisco/Oakland, CA
 		case 2: // Los Angeles Area, CA
+		case 4: // SF Bay Area, CA (The Peninsula & South Bay) 
 		case 5: // San Diego Area, CA
 			// Based on the value i, concatenate sHigh and sLow with either sTemp or sTempTwo
 			if (i == 1) {
@@ -470,7 +493,7 @@ std::string CityCode() {
 		case 3: // Tucson, AZ
 			sCode = "TCSN";
 			break;
-		case 4: // San Jose, CA
+		case 4: // SF Bay Area, CA (The Peninsula & South Bay)
 			sCode = "SJ";
 			break;
 		case 5: // San Diego Area, CA

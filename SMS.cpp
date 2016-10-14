@@ -158,7 +158,7 @@ string City() {
 		cout << "2: Davis/Sacramento, CA" << endl;
 		cout << "3: Los Angeles Area, CA" << endl;
 		cout << "4: Tucson, AZ" << endl; 
-		cout << "5: San Jose, CA" << endl; 
+		cout << "5: SF Bay Area, CA (The Peninsula & South Bay)" << endl; 
 		cout << "6: San Diego Area, CA" << endl; 
 		getline(cin, sInput); 
 
@@ -186,7 +186,7 @@ string City() {
 		case 4: // Tucson, AZ
 			sInput = "TCSN";
 			break;
-		case 5: // San Jose, CA
+		case 5: // SF Bay Area, CA (The Peninsula & South Bay) 
 			sInput = "SJ";
 			break; 
 		case 6: // San Diego Area, CA
