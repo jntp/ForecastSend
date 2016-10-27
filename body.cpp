@@ -165,14 +165,10 @@ std::string Temperature(int iCity, std::string sTemp, std::string sTempTwo) {
 		case 2: // Los Angeles Area, CA
 		case 5: // San Diego Area, CA	
 			sResult = "The high/low will be " + sTemp + "F near the coast and " + sTempTwo + "F in the inland valleys.";
-			break;
-		case 4: // SF Bay Area, CA (The Peninsula & South Bay) 
-			sResult = "The high/low will be " + sTemp + "F in the Peninsula and " + sTempTwo + "F in South Bay.";
 			break; 
 		default:
 			sResult = "The high will be " + sTemp + "F and the low " + sTempTwo + "F."; 
 			break; 
-
 	}
 
 	return sResult; 

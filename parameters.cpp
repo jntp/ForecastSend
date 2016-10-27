@@ -192,7 +192,6 @@ std::string Parameters() {
 				HighLow(2); // Call function to input high/low temperature for sAreaTwo		
 				break;
 			case 2: // Los Angeles Area, CA
-			case 4: // SF Bay Area, CA (The Peninsula & South Bay)
 			case 5: // San Diego Area, CA
 				cout << "For this region, you must enter a range for both the high and low temperatures." << endl;
 				cout << "Please represent the range in this format: ##-## (e.g. 67-75)." << endl;
@@ -204,6 +203,11 @@ std::string Parameters() {
 				cout << sAreaTwo << endl;
 				HighLow(2); 
 				break; 
+			case 4: // SF Bay Area, CA (The Peninsula & South Bay)
+				cout << "For this region, you must enter a range for both the high and low temperatures." << endl;
+				cout << "Please represent the range in this format: ##-## (e.g. 67-75)." << endl;
+				HighLow(0);
+				break;
 			case 1: // Davis/Sacramento, CA
 			case 3: // Tucson, AZ
 				// Call function to input high/low temperature
@@ -454,8 +458,7 @@ int HighLow(int i) {
 	// Check the city/region to see if string concatenation is necessary
 	switch (forecast.iCity) {
 		case 0: // San Francisco/Oakland, CA
-		case 2: // Los Angeles Area, CA
-		case 4: // SF Bay Area, CA (The Peninsula & South Bay) 
+		case 2: // Los Angeles Area, CA 
 		case 5: // San Diego Area, CA
 			// Based on the value i, concatenate sHigh and sLow with either sTemp or sTempTwo
 			if (i == 1) {
