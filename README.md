@@ -1,2 +1,2 @@
 # ForecastSend
-my personal noob project that will expedite sending text message weather forecasts to ppl :)
+Personal project made to expedite sending text message weather forecasts to friends. More information to come! :) 
