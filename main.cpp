@@ -15,35 +15,56 @@ using namespace std;
 using namespace twilio;
 
 int main() {
-	string sForecast = Parameters(); // Run the "Fill in Parameters" part of the code and obtain weather forecast
+	string sInput = ""; // Allow for user input using getline
+	string sForecast; // Stores the weather forecast 
 
-	// Display the string
-	cout << endl;
-	cout << "-------------------------------------------------------" << endl;
-	cout << "The following text will be printed onto 'forecast.txt'" << endl;
-	cout << "Modifications may be done via a text editor." << endl;
-	cout << endl;
-	cout << "*****START*****" << endl;
-	cout << sForecast << endl;
-	cout << "******END******" << endl;
-	cout << endl;
-	cout << "Now saving text onto 'forecast.txt'..." << endl;
+	// Check if user wants to send the forecast directly
+	while (true) {
+		cout << "Would you like to send the forecast directly without inputting parameters? (y/n)" << endl;
+		getline(cin, sInput); 
 
-	// Open a file
-	ofstream endFile("forecast.txt");
+		// Check input
+		if (sInput != "y" && sInput != "n") { // For incorrect responses
+			cout << "Error! Please input 'y' or 'n' only." << endl;
+			cout << endl;
+		} else { // For correct responses
+			cout << endl;
+			break; // Discontinue the while loop 
+		}	
+	}
 
-	// Check if the file opened successfully
-	if (endFile.is_open()) { // If file opened successfully
-		endFile << sForecast; // Save forecast onto the file
-		endFile.close(); // Close the file
-		cout << "Complete! You may now view 'forecast.txt' using a text editor." << endl; // Display message indicating success
-	} else { // If file failed to open succesfully
-		cout << "Error! Unable to open file." << endl; // Display error message 
+	// Direct user to input parameters or not based on the previous response
+	if (sInput == "n") {
+		sForecast = Parameters(sInput); // Run the "Fill in Parameters" part of the code and obtain weather forecast
+
+		// Display the string
+		cout << endl;
+		cout << "-------------------------------------------------------" << endl;
+		cout << "The following text will be printed onto 'forecast.txt'" << endl;
+		cout << "Modifications may be done via a text editor." << endl;
+		cout << endl;
+		cout << "*****START*****" << endl;
+		cout << sForecast << endl;
+		cout << "******END******" << endl;
+		cout << endl;
+		cout << "Now saving text onto 'forecast.txt'..." << endl;
+
+		// Open a file
+		ofstream endFile("forecast.txt");
+
+		// Check if the file opened successfully
+		if (endFile.is_open()) { // If file opened successfully
+			endFile << sForecast; // Save forecast onto the file
+			endFile.close(); // Close the file
+			cout << "Complete! You may now view 'forecast.txt' using a text editor." << endl; // Display message indicating success
+		} else { // If file failed to open succesfully
+			cout << "Error! Unable to open file." << endl; // Display error message 
+		}
+	} else if (sInput == "y") {
+		sForecast = Parameters(sInput); // Run "Fill in Parameters" to obtain the city; don't the weather forecast
 	}
 
 	// Give user time to edit forecast.txt
-	string sInput = ""; // Allow for user input using getline
-	
 	cout << endl;
 	cout << "Please take the time to make any last minute changes to the file." << endl;
 	cout << "When you're done, press any key to continue." << endl; 

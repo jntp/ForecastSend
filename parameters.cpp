@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include <sstream> 
+#include <sstream>  
 
 #include "parameters.h"
 #include "body.h"
@@ -10,9 +10,10 @@ struct parameters forecast;
  
 /*
  * The "main" function of parameters.cpp. Returns a string of a full weather forecast.
+ * Input: string containing "y" or "n"
  * Output: string featuring the forecast 
  */
-std::string Parameters() {
+std::string Parameters(std::string sDirect) {
 	using namespace std;
 	
 	// Fill in parameters
@@ -34,6 +35,11 @@ std::string Parameters() {
 		getline(cin, sInput); // Prompt user input
 		bLoop = CheckInt(sInput, &forecast.iCity, bLoop, 0, 5); // Call CheckInt to verify if input is correct
 	} while (!bLoop);
+
+	// If user indicated to send the forecast directly
+	if (sDirect == "y") {
+		return "HELLO WORLD"; // Stop program from continuing
+	}
 
 	// Storm Type
 	forecast.iStorm = 0; // Assign 0 to allow for conversion 
